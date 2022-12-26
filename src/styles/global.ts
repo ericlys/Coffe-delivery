@@ -6,17 +6,21 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
-
+  
+  html {
+    font-size: 62.5%;
+  }
+  
   :focus {
     outline: 0;
     box-shadow: 0 0 0 2px ${(props) => props.theme['hover']};
   }
 
+
   body {
     background: ${(props) => props.theme['background']} ;
     color: ${(props) => props.theme['text']};
     -webkit-font-smoothing: antialiased;
-    font-size: 62.5%;
   }
 
   body, input, textarea, button {

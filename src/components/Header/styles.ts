@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 export const HeaderContainer = styled.header`
   width: 100%;
-  max-width: 84rem;
+  max-width: 112rem;
   padding: 3.2rem 2rem;
   
   display: flex;
@@ -23,9 +23,9 @@ export const Locality = styled.div`
 `
 
 export const MapPoint = styled(MapPin).attrs({
-  weight: "fill"
+  weight: "fill",
+  size: 22
 })`
-  size: 22rem;
   color: ${(props) => props.theme['purple']};
 `
 
@@ -46,8 +46,8 @@ export const Cart = styled.div`
 `
 
 export const CartIcon = styled(ShoppingCart).attrs({
-  weight: "fill"
+  weight: "fill",
+  size: 22
 })`
-  size: 22rem;
   color: ${(props) => props.theme['yellow-dark']};
 `
