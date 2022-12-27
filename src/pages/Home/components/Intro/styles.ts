@@ -22,12 +22,13 @@ export const Container = styled.div`
 
   p {
     max-width: 58.8rem;
+    margin-top: 1.6rem;
     font-size: 2rem;
     color: ${({theme}) => theme['subtitle']};
   }
 `
 
-export const WrapperInfo = styled.div`
+export const WrapperInfo = styled.ul`
   max-width: 58.8rem;
   display: flex;
   flex-wrap: wrap;
@@ -35,7 +36,7 @@ export const WrapperInfo = styled.div`
   margin-top: 6.6rem;
 `
 
-export const Info = styled.div`
+export const Info = styled.li`
   display: flex;
   align-items: center;
   gap: 1.2rem;
