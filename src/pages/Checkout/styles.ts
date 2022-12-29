@@ -1,4 +1,4 @@
-import { Bank, CreditCard, CurrencyDollar, MapPinLine, Money } from 'phosphor-react'
+import { Bank, CreditCard, CurrencyDollar, MapPinLine, Money, Trash } from 'phosphor-react'
 import styled from 'styled-components'
 
 export const Container = styled.div`
@@ -125,4 +125,107 @@ export const MoneyIcon = styled(Money).attrs({
 })`
   color: ${(props)=> props.theme['purple']}
 `
-  
+
+export const ItensWrapper = styled.div`
+  background: ${(props) => props.theme['card']};
+  padding: 4rem;
+  border-radius: 6px 44px;
+  margin-bottom: 1.2rem;
+
+  div {
+    display: flex;
+
+    img {
+      max-width: 64px;
+      max-height: 64px;
+    }
+  }
+`
+
+export const Price = styled.div`
+  font-weight: 700;
+  font-size: 1.6rem;
+`
+
+export const SummaryOptions = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 5rem 0 2rem;
+  gap: .8rem;
+
+  span {
+    font-weight: 400;
+    font-size: 1.6rem;
+  }
+
+  div {
+    gap: .8rem;
+  }
+`
+export const RemoveButton = styled.div`
+  display: flex;
+  flex-direction: row;
+  font-size: 1.2rem;
+  color: ${(props) => props.theme['text']};
+  background: ${(props) => props.theme['button']};
+  padding: .8rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+  align-items: center;
+  cursor: pointer;
+
+  :active {
+    transform: scale(0.9);
+  }
+`
+
+export const TrashIcon = styled(Trash).attrs({
+  size: 16
+})`
+  color: ${(props)=> props.theme['purple']}
+`
+
+export const Hr = styled.div`
+  border-top: 1px solid ${(props) => props.theme['button']}; 
+  margin: 24px 0;
+`
+
+export const SummaryWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.4rem;
+    color: ${(props) => props.theme['text']}; 
+    margin-bottom: 1.2rem;
+
+    span {
+      color: ${(props) => props.theme['subtitle']}; 
+      font-weight: 700;
+      font-size: 2rem;
+    }
+  }
+`
+
+export const SubmitButton = styled.input`
+  width: 100%;
+  border: none;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: ${(props) => props.theme['white']}; 
+  background: ${(props) => props.theme['yellow']}; 
+  padding: 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+
+  :active {
+    transform: scale(.99);
+  }
+
+  :hover {
+    filter: brightness(1.1);
+  }
+`

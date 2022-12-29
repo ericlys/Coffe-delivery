@@ -1,8 +1,11 @@
 import { useForm } from "react-hook-form";
-import * as zod from 'zod';
+import * as zod from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AddressWrapper, LineFormWrapper, Card, CardTitle, Container, CurrencyDollarIcon, MapPinLineIcon, OrderDataWrapper, OrderProductsWrapper, MoneySupplyWrapper, MoneySupply, CreditCardIcon, BankIcon, MoneyIcon } from "./styles";
+import { AddressWrapper, LineFormWrapper, Card, CardTitle, Container, CurrencyDollarIcon, MapPinLineIcon, OrderDataWrapper, OrderProductsWrapper, MoneySupplyWrapper, MoneySupply, CreditCardIcon, BankIcon, MoneyIcon, SummaryWrapper, RemoveButton, TrashIcon, SummaryOptions, Price, Hr, ItensWrapper, SubmitButton } from "./styles";
 import { Input } from "./components/Input";
+
+import CupOfCoffe from "../../assets/cup.svg";
+import { InputNumber } from "../../components/InputNumber";
 
 const checkoutFormValidationSchema = zod.object({
   zipCode: zod.string().max(8, 'Cep inválido'),
@@ -161,11 +164,72 @@ export function Checkout(){
         </OrderDataWrapper>
 
         <OrderProductsWrapper>
-        <h3>Cafés selecionados</h3>
+          <h3>Cafés selecionados</h3>
+          <ItensWrapper>
+            <div>
+              <img src={CupOfCoffe} alt="" />
+              
+              <SummaryOptions>
+                <span>Expresso tradicional</span>
+                <div>
+                  <InputNumber/>
+                  <RemoveButton>
+                    <TrashIcon/>
+                    Remove
+                  </RemoveButton>
+                </div>
+              </SummaryOptions>
+
+              <Price>
+                R$ 9,90
+              </Price>
+            </div>
+
+            <Hr/>
+
+            <div>
+              <img src={CupOfCoffe} alt="" />
+              
+              <SummaryOptions>
+                <span>Expresso tradicional</span>
+                <div>
+                  <InputNumber/>
+                  <RemoveButton>
+                    <TrashIcon/>
+                    Remove
+                  </RemoveButton>
+                </div>
+              </SummaryOptions>
+
+              <Price>
+                R$ 9,90
+              </Price>
+            </div>
+
+            <Hr/>
+
+          <SummaryWrapper>
+            <ul>
+              <li>
+                <p>Total de itens</p>
+                <p>R$ 29,70</p>
+              </li>
+              <li>
+                <p>Entrega</p>
+                <p>R$ 3,50</p>
+              </li>
+              <li>
+                <span>Total</span>
+                <span>R$ 33,20</span>
+              </li>
+            </ul>
+
+            <SubmitButton type="submit" value="Confirmar pedido"/>
+          </SummaryWrapper>
+          </ItensWrapper>
+
         </OrderProductsWrapper>
      </Container>
-
-     {/* <input type="submit" /> */}
     </form>
   )
 }
