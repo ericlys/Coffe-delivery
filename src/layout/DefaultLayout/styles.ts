@@ -8,3 +8,7 @@ export const LayoutContainer = styled.div`
   display: flex;
   flex-direction: column;
 `
+
+export const Space = styled.div`
+  height: 106px;
+`

@@ -3,12 +3,22 @@ import styled from 'styled-components'
 
 export const HeaderContainer = styled.header`
   width: 100%;
+  position: fixed;
+  background: ${(props) => props.theme['background']};
+`
+
+export const Content = styled.div`
+  width: 100%;
   max-width: 112rem;
   padding: 3.2rem 2rem;
   
   display: flex;
   justify-content: space-between;
   margin: auto;
+
+  a:focus {
+   box-shadow: none;
+   }
 `
 export const Locality = styled.div`
   padding: .8rem;
@@ -43,6 +53,15 @@ export const Cart = styled.div`
   font-size: 1.4rem;
   
   background: ${(props) => props.theme['yellow-light']};
+
+  cursor: pointer;
+
+  :hover {
+    filter: brightness(1.02);
+  }
+  :active {
+    transform: scale(.9);
+  }
 `
 
 export const CartIcon = styled(ShoppingCart).attrs({
