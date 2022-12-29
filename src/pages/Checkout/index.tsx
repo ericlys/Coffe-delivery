@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AddressWrapper, LineFormWrapper, Card, CardTitle, Container, CurrencyDollarIcon, MapPinLineIcon, OrderDataWrapper, OrderProductsWrapper } from "./styles";
+import { AddressWrapper, LineFormWrapper, Card, CardTitle, Container, CurrencyDollarIcon, MapPinLineIcon, OrderDataWrapper, OrderProductsWrapper, MoneySupplyWrapper, MoneySupply, CreditCardIcon, BankIcon, MoneyIcon } from "./styles";
 import { Input } from "./components/Input";
 
 const checkoutFormValidationSchema = zod.object({
@@ -128,9 +128,7 @@ export function Checkout(){
                   width={6}
                 />
               </LineFormWrapper>
-
             </AddressWrapper>
-
           </Card>
 
           <Card>
@@ -141,6 +139,24 @@ export function Checkout(){
                 <span>O pagamento é feito na entrega. Escolha a forma que deseja pagar</span>
               </div>
             </CardTitle>
+
+            <MoneySupplyWrapper>
+              <MoneySupply>
+                <CreditCardIcon/>
+                <input type="radio" name="moneySupply" value="credit card"/>
+                <label htmlFor="moneySupply">Cartão de crédito</label>
+              </MoneySupply>
+              <MoneySupply>
+                <BankIcon/>
+                <input type="radio" name="moneySupply" value="debit card"/>
+                <label htmlFor="moneySupply">cartão de débito</label>
+              </MoneySupply>
+              <MoneySupply>
+               <MoneyIcon/>
+               <input type="radio" name="moneySupply" value="cash"/>
+               <label htmlFor="moneySupply">dinheiro</label>
+              </MoneySupply>
+            </MoneySupplyWrapper>
           </Card>
         </OrderDataWrapper>
 

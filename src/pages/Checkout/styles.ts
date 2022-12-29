@@ -1,4 +1,4 @@
-import { CurrencyDollar, MapPinLine } from 'phosphor-react'
+import { Bank, CreditCard, CurrencyDollar, MapPinLine, Money } from 'phosphor-react'
 import styled from 'styled-components'
 
 export const Container = styled.div`
@@ -74,3 +74,55 @@ export const LineFormWrapper = styled.div`
   display: flex;
   gap: 1.6rem
 `
+
+export const MoneySupplyWrapper = styled.div`
+  margin-top: 3.2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1.2rem;
+  flex: 1;
+`
+
+export const MoneySupply = styled.div`
+  display: flex;
+  height: 5.1rem;
+  width: 17.9rem;
+  gap: 1.2rem;
+  cursor: pointer;
+
+  align-items: center;
+  padding-left: 1.5rem;
+
+  background: ${(props) => props.theme['button']};
+  border-radius: 6px;
+
+  input {
+    display: none;
+  }
+
+  label {
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+`
+
+export const CreditCardIcon = styled(CreditCard).attrs({
+  size: 16
+})`
+  color: ${(props)=> props.theme['purple']}
+`
+  
+export const BankIcon = styled(Bank).attrs({
+  size: 16
+})`
+  color: ${(props)=> props.theme['purple']}
+`
+
+export const MoneyIcon = styled(Money).attrs({
+  size: 16
+})`
+  color: ${(props)=> props.theme['purple']}
+`
+  
