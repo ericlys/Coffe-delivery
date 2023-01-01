@@ -6,6 +6,7 @@ import { Input } from "./components/Input";
 
 import CupOfCoffe from "../../assets/cup.svg";
 import { InputNumber } from "../../components/InputNumber";
+import { useNavigate } from "react-router-dom";
 
 const checkoutFormValidationSchema = zod.object({
   zipCode: zod.string().max(8, 'Cep inválido'),
@@ -15,15 +16,19 @@ const checkoutFormValidationSchema = zod.object({
   district: zod.string(),
   city: zod.string(),
   state: zod.string(),
+  moneySupply: zod.string(),
 })
 
 type checkoutFormData = zod.infer<typeof checkoutFormValidationSchema>
 
 export function Checkout(){
+  const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<checkoutFormData>({
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<checkoutFormData>({
     resolver: zodResolver(checkoutFormValidationSchema)
   });
+
+  console.log(errors)
 
   const zipCode = register('zipCode', { required: true })
   const street = register('street', { required: true })
@@ -34,7 +39,11 @@ export function Checkout(){
   const state = register('state', { required: true })
 
 
-  const onSubmit = (data: checkoutFormData) => console.log(data);
+  const onSubmit = (data: checkoutFormData) =>{
+     console.log(data)
+
+     navigate('/success')
+    };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -146,17 +155,29 @@ export function Checkout(){
             <MoneySupplyWrapper>
               <MoneySupply>
                 <CreditCardIcon/>
-                <input type="radio" name="moneySupply" value="credit card"/>
+                <input 
+                  type="radio" 
+                  name="moneySupply" 
+                  value="credit card" 
+                />
                 <label htmlFor="moneySupply">Cartão de crédito</label>
               </MoneySupply>
               <MoneySupply>
                 <BankIcon/>
-                <input type="radio" name="moneySupply" value="debit card"/>
+                <input 
+                  type="radio" 
+                  name="moneySupply" 
+                  value="debit card"
+                />
                 <label htmlFor="moneySupply">cartão de débito</label>
               </MoneySupply>
               <MoneySupply>
                <MoneyIcon/>
-               <input type="radio" name="moneySupply" value="cash"/>
+               <input 
+                type="radio" 
+                name="moneySupply" 
+                value="cash"
+               />
                <label htmlFor="moneySupply">dinheiro</label>
               </MoneySupply>
             </MoneySupplyWrapper>
