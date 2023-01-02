@@ -1,5 +1,5 @@
 import { MapPin, ShoppingCart } from 'phosphor-react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const HeaderContainer = styled.header`
   width: 100%;
@@ -44,14 +44,18 @@ export const ShoppingInfo = styled.div`
   gap: 1.2rem;
 `
 
-export const Cart = styled.div`
+interface CartProps {
+  value?: string
+}
+
+export const Cart = styled.div<CartProps>`
   padding: .8rem;
   display: flex;
   align-items: center;
   gap: .4rem;
   border-radius: 6px;
   font-size: 1.4rem;
-  
+  position: relative;
   background: ${(props) => props.theme['yellow-light']};
 
   cursor: pointer;
@@ -61,6 +65,20 @@ export const Cart = styled.div`
   }
   :active {
     transform: scale(.9);
+  }
+  
+  
+  ::after{
+    content: '${(props) => !!props.value ? props.value : ''}';
+    font-weight: 700;
+    font-size: 1.2rem;
+    top: -1rem;
+    right: -.9rem;
+    padding: .4rem;
+    border-radius: 999px;
+    background: ${(props) => !!props.value ? props.theme['yellow-dark'] : ''};
+    color: ${(props) => props.theme['white']};
+    position: absolute;
   }
 `
 

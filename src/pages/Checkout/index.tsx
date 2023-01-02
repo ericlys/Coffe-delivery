@@ -1,12 +1,13 @@
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AddressWrapper, LineFormWrapper, Card, CardTitle, Container, CurrencyDollarIcon, MapPinLineIcon, OrderDataWrapper, OrderProductsWrapper, MoneySupplyWrapper, MoneySupply, CreditCardIcon, BankIcon, MoneyIcon, SummaryWrapper, RemoveButton, TrashIcon, SummaryOptions, Price, Hr, ItensWrapper, SubmitButton } from "./styles";
 import { Input } from "./components/Input";
 
-import CupOfCoffe from "../../assets/cup.svg";
 import { InputNumber } from "../../components/InputNumber";
 import { useNavigate } from "react-router-dom";
+import { ShoppingCartContext } from "../../context/ShoppingCartContext";
 
 const checkoutFormValidationSchema = zod.object({
   zipCode: zod.string().max(8, 'Cep inválido'),
@@ -23,12 +24,32 @@ type checkoutFormData = zod.infer<typeof checkoutFormValidationSchema>
 
 export function Checkout(){
   const navigate = useNavigate();
+  const {cart, removeProductFromShoppingCart} = useContext(ShoppingCartContext);
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<checkoutFormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<checkoutFormData>({
     resolver: zodResolver(checkoutFormValidationSchema)
   });
 
-  console.log(errors)
+  const formCurrency = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2
+  });
+  
+  const delivery = Math.random() * (10 - 1) + 1;
+
+  const itemsAmount = 0;
+  const total = 0;
+
+  const summary = cart.reduce(
+    (acc, cur) => {
+      acc.itemsAmount += cur.product.price * cur.amount;
+      acc.total = acc.itemsAmount + delivery;
+      return acc;
+    },{
+      itemsAmount,
+      total
+  })
 
   const zipCode = register('zipCode', { required: true })
   const street = register('street', { required: true })
@@ -40,10 +61,14 @@ export function Checkout(){
 
 
   const onSubmit = (data: checkoutFormData) =>{
-     console.log(data)
+    console.log(data)
 
-     navigate('/success')
-    };
+    navigate('/success')
+  };
+
+  const handleRemoveItem = (id: number) => {
+    removeProductFromShoppingCart(id);
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -187,61 +212,47 @@ export function Checkout(){
         <OrderProductsWrapper>
           <h3>Cafés selecionados</h3>
           <ItensWrapper>
-            <div>
-              <img src={CupOfCoffe} alt="" />
-              
-              <SummaryOptions>
-                <span>Expresso tradicional</span>
+
+            { cart.map( item => (
+              <>
                 <div>
-                  <InputNumber/>
-                  <RemoveButton>
-                    <TrashIcon/>
-                    Remove
-                  </RemoveButton>
-                </div>
-              </SummaryOptions>
+                <img src={item.product.image} alt="" />
+                
+                <SummaryOptions>
+                  <span>{item.product.name}</span>
+                  <div>
+                    <InputNumber value={item.amount}/>
+                    <RemoveButton onClick={() => handleRemoveItem(item.product.id)}>
+                      <TrashIcon/>
+                      Remove
+                    </RemoveButton>
+                  </div>
+                </SummaryOptions>
 
-              <Price>
-                R$ 9,90
-              </Price>
-            </div>
+                <Price>
+                  {formCurrency.format(item.product.price)}
+                </Price>
+              </div>
 
-            <Hr/>
+              <Hr/>
+              </>
+            ))}
 
-            <div>
-              <img src={CupOfCoffe} alt="" />
-              
-              <SummaryOptions>
-                <span>Expresso tradicional</span>
-                <div>
-                  <InputNumber/>
-                  <RemoveButton>
-                    <TrashIcon/>
-                    Remove
-                  </RemoveButton>
-                </div>
-              </SummaryOptions>
-
-              <Price>
-                R$ 9,90
-              </Price>
-            </div>
-
-            <Hr/>
+            
 
           <SummaryWrapper>
             <ul>
               <li>
                 <p>Total de itens</p>
-                <p>R$ 29,70</p>
+                <p>{formCurrency.format(summary.itemsAmount)}</p>
               </li>
               <li>
                 <p>Entrega</p>
-                <p>R$ 3,50</p>
+                <p>{formCurrency.format(delivery)}</p>
               </li>
               <li>
                 <span>Total</span>
-                <span>R$ 33,20</span>
+                <span>{formCurrency.format(summary.total)}</span>
               </li>
             </ul>
 

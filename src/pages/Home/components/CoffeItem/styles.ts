@@ -34,6 +34,7 @@ export const Tags = styled.div`
     background: ${(props) => props.theme['yellow-light']};
     border-radius: 999px;
     padding: 4px 8px;
+    text-transform: uppercase;
   }
 `
 
@@ -69,6 +70,7 @@ export const BuyWrapper = styled.div`
   }
 
   span {
+    margin-left: .3rem;
     font-family: 'Baloo 2', sans-serif;
     font-weight: 800;
     font-size: 2.4rem;

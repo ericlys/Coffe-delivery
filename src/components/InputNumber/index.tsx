@@ -1,11 +1,13 @@
 import { InputHTMLAttributes, useState } from "react";
 import { Container, MinusIcon, PlusIcon } from "./styles";
 
-interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement>{}
+interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement>{
+  value: number,
+  setValue: (value: number) => void;
+}
 
-export function InputNumber({...rest}: InputNumberProps){
-  const [value, setValue] = useState(0);
-
+export function InputNumber({value, setValue, ...rest}: InputNumberProps){
+ 
   const handleDecrement = () => {
     if(value > 0) {
       setValue(value - 1)

@@ -1,28 +1,54 @@
 import { BuyActionsWrapper, BuyCartIcon, BuyWrapper, Container, InfoWrapper, Tags } from "./styles";
-import TraditionalCoffe from "../../../../assets/cup.svg"
 import { InputNumber } from "../../../../components/InputNumber";
+import { useContext, useEffect, useState } from "react";
+import { ShoppingCartContext } from "../../../../context/ShoppingCartContext";
 
-export function CoffeItem(){
+interface Coffe {
+  id: number
+  name: string
+  description: string
+  price: number
+  tags: string[]
+  image: string
+  isAvaliable?: boolean
+}
+
+interface CoffeItemProps {
+  coffe: Coffe;
+}
+
+export function CoffeItem({coffe}: CoffeItemProps){
+  const { addProductToShoppingCart } = useContext(ShoppingCartContext);
+
+  const [value, setValue] = useState(0);
+
+  const handleAddCoffe = () => {
+    addProductToShoppingCart(coffe, value);
+    setValue(0);
+  }
+
   return(
     <Container>
-      <img src={TraditionalCoffe} alt="traditional coffe"/>
+      <img src={coffe.image} alt="traditional coffe"/>
 
       <Tags>
-        <span>Tradicional</span>
-        <span>Com leite</span>
+      {coffe.tags.map(tag => (
+        <span key={tag}>{tag}</span>
+        )
+      )}
       </Tags>
 
       <InfoWrapper>
-        <h3>Expresso Tradicional</h3>
-        <span>O tradicional café feito com água quente e grãos moídos</span>
+        <h3>{coffe.name}</h3>
+        <span>{coffe.description}</span>
       </InfoWrapper>
 
       <BuyWrapper>
-        <p>R$ <span>9,90</span></p>
+        <p>R$<span>{coffe.price}</span></p>
 
         <BuyActionsWrapper>
-          <InputNumber />
-          <BuyCartIcon />
+          <InputNumber value={value} setValue={setValue}/>
+          <BuyCartIcon onClick={handleAddCoffe} />
         </BuyActionsWrapper>
       </BuyWrapper>
     </Container>

@@ -17,5 +17,6 @@ export const Container = styled.div`
 export const Main = styled.main`
   display: flex;
   gap: 3.2rem;
+  justify-content: center;
   flex-wrap: wrap;
 `
