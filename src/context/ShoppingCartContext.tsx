@@ -18,6 +18,7 @@ interface ShoppingCartContextType {
   amountItems: number,
   addProductToShoppingCart: (product: Product, amount:number) => void,
   removeProductFromShoppingCart: (productId: number) => void,
+  updateProductAmount: (productId:number, amount:number) => void,
   clearShoppingCart: () => void
 }
 
@@ -39,7 +40,6 @@ export function ShoppingCartContextProvider({children}: ShoppingCartContextProps
     }
   },[])
 
-    console.log(cart)
     useEffect(() => {
     const amount = cart.reduce(( acc, item) => 
       acc + item.amount
@@ -53,14 +53,14 @@ export function ShoppingCartContextProvider({children}: ShoppingCartContextProps
       return
     }
 
-    const coffeIndex = cart.findIndex( item => item.product.id === product.id)
+    const itemIndex = cart.findIndex( item => item.product.id === product.id)
     
     let newCart = [...cart];
 
-    if(coffeIndex < 0) {
+    if(itemIndex < 0) {
       newCart = [...cart, {product, amount}]
     } else {
-      newCart[coffeIndex] = {product, amount: newCart[coffeIndex].amount + amount};
+      newCart[itemIndex] = {product, amount: newCart[itemIndex].amount + amount};
     }
     
     setCart(newCart)
@@ -74,6 +74,19 @@ export function ShoppingCartContextProvider({children}: ShoppingCartContextProps
     localStorage.setItem('coffe-delivery',JSON.stringify(newListWithoutItem));
   }
 
+  function updateProductAmount(productId:number, amount:number){
+    if(amount < 1) {
+      return
+    }
+
+    const updateAmountList = cart.map( item => {
+      return item.product.id === productId ?  {...item, amount} : item
+    })
+
+    setCart(updateAmountList)
+    localStorage.setItem('coffe-delivery',JSON.stringify(updateAmountList));
+  }
+
   function clearShoppingCart() {
     setCart([]);
   }
@@ -83,6 +96,7 @@ export function ShoppingCartContextProvider({children}: ShoppingCartContextProps
       cart,
       amountItems,
       addProductToShoppingCart,
+      updateProductAmount,
       removeProductFromShoppingCart,
       clearShoppingCart
     }}>

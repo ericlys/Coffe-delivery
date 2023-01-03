@@ -84,24 +84,35 @@ export const MoneySupplyWrapper = styled.div`
   flex: 1;
 `
 
-export const MoneySupply = styled.div`
+interface RadioBoxProps{
+    isActive: boolean;
+}
+
+export const RadioBox = styled.button<RadioBoxProps>`
   display: flex;
   height: 5.1rem;
   width: 17.9rem;
   gap: 1.2rem;
   cursor: pointer;
+  border: 1px solid transparent;
 
   align-items: center;
   padding-left: 1.5rem;
 
-  background: ${(props) => props.theme['button']};
+  background: ${({theme, isActive}) => isActive 
+  ? theme['purple-light']
+  : theme['button']
+  };
+
+  border-color: ${({theme, isActive}) => isActive 
+  ? theme['purple']
+  : ''
+  };
+
   border-radius: 6px;
+  /* box-shadow: none; */
 
-  input {
-    display: none;
-  }
-
-  label {
+  span {
     text-transform: uppercase;
     font-size: 1.2rem;
     cursor: pointer;
@@ -133,11 +144,13 @@ export const ItensWrapper = styled.div`
   margin-bottom: 1.2rem;
 
   div {
-    display: flex;
+    div {
+      display: flex;
 
-    img {
-      max-width: 64px;
-      max-height: 64px;
+      img {
+        max-width: 64px;
+        max-height: 64px;
+      }
     }
   }
 `

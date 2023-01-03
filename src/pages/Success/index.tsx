@@ -1,7 +1,25 @@
 import { Container, Content, CurrencyDollarCircleIcon, Info, InfoDelivery, MapCircleIcon, TimerCircleIcon } from "./styles";
 import DeliveryManImage from "../../assets/deliveryman.svg";
+import { useLocation } from "react-router-dom";
 
 export function Success() {
+  const location = useLocation();
+
+  const {address, moneySupply} = location.state;
+
+  const formatPSupplyMethod = (supply: string) => {
+    switch(supply) {
+      case 'cash': 
+        return 'Dinheiro';
+      case 'credit card':
+        return 'Cartão de Crédito';
+      case 'debit card':
+        return 'Cartão de Débito';
+      default:
+        return ''
+    }
+  }
+
   return (
     <Container>
       <Content>
@@ -12,8 +30,8 @@ export function Success() {
           <div>
             <MapCircleIcon/>
             <Info>
-              <p>Entrega em <span>Rua Jão Daniel Martinelli,102</span></p>
-              <p>Farrapos - Porto Alegre, RS</p>
+              <p>Entrega em <span>{address.street}, {address.number}</span></p>
+              <p>{address.district} - {address.city}, {address.state}</p>
             </Info>
           </div>
 
@@ -29,7 +47,7 @@ export function Success() {
             <CurrencyDollarCircleIcon/>
             <Info>
             <p>Pagamento na entrega</p>
-            <span>Cartão de Crédito</span>
+            <span>{formatPSupplyMethod(moneySupply)}</span>
             </Info>
           </div>
         </InfoDelivery>

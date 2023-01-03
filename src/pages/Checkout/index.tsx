@@ -1,8 +1,31 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AddressWrapper, LineFormWrapper, Card, CardTitle, Container, CurrencyDollarIcon, MapPinLineIcon, OrderDataWrapper, OrderProductsWrapper, MoneySupplyWrapper, MoneySupply, CreditCardIcon, BankIcon, MoneyIcon, SummaryWrapper, RemoveButton, TrashIcon, SummaryOptions, Price, Hr, ItensWrapper, SubmitButton } from "./styles";
+
+import { 
+  AddressWrapper, 
+  LineFormWrapper, 
+  Card, 
+  CardTitle,
+  Container, 
+  CurrencyDollarIcon, 
+  MapPinLineIcon,
+  OrderDataWrapper, 
+  OrderProductsWrapper, 
+  MoneySupplyWrapper, 
+  CreditCardIcon, BankIcon, 
+  MoneyIcon, 
+  SummaryWrapper, 
+  RemoveButton, 
+  TrashIcon, 
+  SummaryOptions, 
+  Price,
+  Hr, 
+  ItensWrapper, 
+  SubmitButton, 
+  RadioBox } from "./styles";
+
 import { Input } from "./components/Input";
 
 import { InputNumber } from "../../components/InputNumber";
@@ -10,23 +33,25 @@ import { useNavigate } from "react-router-dom";
 import { ShoppingCartContext } from "../../context/ShoppingCartContext";
 
 const checkoutFormValidationSchema = zod.object({
-  zipCode: zod.string().max(8, 'Cep inválido'),
-  street: zod.string(),
-  number: zod.string(),
-  complement: zod.string(),
-  district: zod.string(),
-  city: zod.string(),
-  state: zod.string(),
-  moneySupply: zod.string(),
+  zipCode: zod.string().length(9, 'Cep inválido'),
+  street: zod.string().min(1),
+  number: zod.string().min(1),
+  complement: zod.string().optional(),
+  district: zod.string().min(1),
+  city: zod.string().min(1),
+  state: zod.string().min(1),
 })
 
 type checkoutFormData = zod.infer<typeof checkoutFormValidationSchema>
 
+type moneySupplyType = 'credit card' | 'debit card' | 'cash';
+
 export function Checkout(){
   const navigate = useNavigate();
-  const {cart, removeProductFromShoppingCart} = useContext(ShoppingCartContext);
+  const [moneySupply, setMoneySupply] = useState<moneySupplyType>('credit card');
+  const {cart, removeProductFromShoppingCart, updateProductAmount, clearShoppingCart} = useContext(ShoppingCartContext);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<checkoutFormData>({
+  const { register, handleSubmit, watch, setValue } = useForm<checkoutFormData>({
     resolver: zodResolver(checkoutFormValidationSchema)
   });
 
@@ -51,24 +76,49 @@ export function Checkout(){
       total
   })
 
-  const zipCode = register('zipCode', { required: true })
-  const street = register('street', { required: true })
-  const number = register('number', { required: true })
-  const complement = register('complement', { required: false })
-  const district = register('district', { required: true })
-  const city = register('city', { required: true })
-  const state = register('state', { required: true })
 
 
   const onSubmit = (data: checkoutFormData) =>{
-    console.log(data)
+    navigate('/success', { state: {
+      address: data,
+      moneySupply: moneySupply
+    }})
 
-    navigate('/success')
+    clearShoppingCart();
   };
 
   const handleRemoveItem = (id: number) => {
     removeProductFromShoppingCart(id);
   }
+
+  const handleUpdateAmount = (amount: number, productId: number) => {
+    updateProductAmount(productId, amount);
+  }
+
+  const getAddressByZipCode = async (code: string) => {
+    const response = await fetch(
+      `http://viacep.com.br/ws/${code}/json/`,
+    )
+
+    const address = await response.json();
+    
+    if(!address.erro) {
+      setValue("street", address.bairro)
+      setValue("complement", address.complemento)
+      setValue("district", address.logradouro)
+      setValue("city", address.localidade)
+      setValue("state", address.uf)
+    }
+  }
+
+  useEffect(( ) => {
+    const code = watch('zipCode').replace(/\D/g, "");
+    if(code.length === 8) {
+      getAddressByZipCode(code)
+    }
+  }, [watch('zipCode')])
+
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -87,36 +137,28 @@ export function Checkout(){
 
             <AddressWrapper>
               <Input
-                label="zipCode"
                 id="zipCode" 
+                label="zipCode"
+                mask={"99999-999"}
                 placeholder="CEP" 
-                name={zipCode.name}
-                onChange={zipCode.onChange}
-                onBlur={zipCode.onBlur}
-                inputRef={zipCode.ref}
+                {...register('zipCode')}
                 width={20}
               />
 
               <Input 
-                label="street" 
                 id="street" 
+                label="street" 
                 placeholder="Rua" 
-                name={street.name}
-                onChange={street.onChange}
-                onBlur={street.onBlur}
-                inputRef={street.ref}
+                {...register('street')}
               />
 
               <LineFormWrapper>
                 <Input
                   id="number" 
-                  label="number" 
+                  label="number"
                   type={"number"}
                   placeholder="Número" 
-                  name={number.name}
-                  onChange={number.onChange}
-                  onBlur={number.onBlur}
-                  inputRef={number.ref}
+                  {...register('number')}
                   width={20}
                 />
 
@@ -125,22 +167,18 @@ export function Checkout(){
                   label="complement" 
                   optional 
                   placeholder="Complemento" 
-                  name={complement.name}
-                  onChange={complement.onChange}
-                  onBlur={complement.onBlur}
-                  inputRef={complement.ref}
+                  {...register('complement')}
+                  register={register}
                 />
               </LineFormWrapper>
 
               <LineFormWrapper>
                 <Input 
                   id="district" 
-                  label="district" 
+                  label="district"
                   placeholder="Bairro" 
-                  name={district.name}
-                  onChange={district.onChange}
-                  onBlur={district.onBlur}
-                  inputRef={district.ref}
+                  register={register}
+                  {...register('district')}
                   width={20}
                 />
 
@@ -148,20 +186,15 @@ export function Checkout(){
                   id="city" 
                   label="city" 
                   placeholder="Cidade" 
-                  name={city.name}
-                  onChange={city.onChange}
-                  onBlur={city.onBlur}
-                  inputRef={city.ref}
+                  {...register('city')}
+                  register={register}
                 />
 
                 <Input 
                   id="state" 
                   label="state" 
                   placeholder="UF" 
-                  name={state.name}
-                  onChange={state.onChange}
-                  onBlur={state.onBlur}
-                  inputRef={state.ref}
+                  {...register('state')}
                   width={6}
                 />
               </LineFormWrapper>
@@ -178,33 +211,30 @@ export function Checkout(){
             </CardTitle>
 
             <MoneySupplyWrapper>
-              <MoneySupply>
+              <RadioBox 
+                type='button'
+                isActive={moneySupply === 'credit card'}
+                onClick={() => setMoneySupply('credit card')}  
+              >
                 <CreditCardIcon/>
-                <input 
-                  type="radio" 
-                  name="moneySupply" 
-                  value="credit card" 
-                />
-                <label htmlFor="moneySupply">Cartão de crédito</label>
-              </MoneySupply>
-              <MoneySupply>
+                <span>Cartão de crédito</span>
+              </RadioBox>
+              <RadioBox   
+                type='button'
+                isActive={moneySupply === 'debit card'}
+                onClick={() => setMoneySupply('debit card')}  
+              >
                 <BankIcon/>
-                <input 
-                  type="radio" 
-                  name="moneySupply" 
-                  value="debit card"
-                />
-                <label htmlFor="moneySupply">cartão de débito</label>
-              </MoneySupply>
-              <MoneySupply>
+                <span>cartão de débito</span>
+              </RadioBox>
+              <RadioBox 
+                type='button'
+                isActive={moneySupply === 'cash'}
+                onClick={() => setMoneySupply('cash')}  
+              >
                <MoneyIcon/>
-               <input 
-                type="radio" 
-                name="moneySupply" 
-                value="cash"
-               />
-               <label htmlFor="moneySupply">dinheiro</label>
-              </MoneySupply>
+               <span>dinheiro</span>
+              </RadioBox>
             </MoneySupplyWrapper>
           </Card>
         </OrderDataWrapper>
@@ -214,14 +244,17 @@ export function Checkout(){
           <ItensWrapper>
 
             { cart.map( item => (
-              <>
+              <div key={item.product.id}>
                 <div>
                 <img src={item.product.image} alt="" />
                 
                 <SummaryOptions>
                   <span>{item.product.name}</span>
                   <div>
-                    <InputNumber value={item.amount}/>
+                    <InputNumber 
+                      value={item.amount}
+                      setValue={(e) => handleUpdateAmount(e, item.product.id)}
+                    />
                     <RemoveButton onClick={() => handleRemoveItem(item.product.id)}>
                       <TrashIcon/>
                       Remove
@@ -235,11 +268,10 @@ export function Checkout(){
               </div>
 
               <Hr/>
-              </>
+              </div>
             ))}
 
             
-
           <SummaryWrapper>
             <ul>
               <li>

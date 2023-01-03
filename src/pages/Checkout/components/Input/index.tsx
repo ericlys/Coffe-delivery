@@ -1,26 +1,32 @@
-import {  InputHTMLAttributes, useState } from "react";
-import { RefCallBack } from "react-hook-form";
+import {  forwardRef, InputHTMLAttributes, useState } from "react";
 import { Container } from "./styles";
+import InputMask from "react-input-mask";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement>{
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   optional?: boolean,
   label: string,
-  inputRef: RefCallBack,
-  width?: number
+  register?: any,
+  width?: number,
+  mask?: string
 }
 
-export function Input({label, width, optional = false, inputRef, ...rest}: InputProps) {
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ optional, label, width, mask='', ...props }, ref) => {
+
   const [onFocus, setOnFocus] = useState(false);
 
   return(
     <Container width={width}>
       <label htmlFor={label}/>
-      <input {...rest} 
-        ref={inputRef}
+      <InputMask
+        inputRef={ref}
+        mask={mask}
         onFocus={() => setOnFocus(true)} 
+        {...props } 
         onBlur={() => setOnFocus(false)} 
       />
       {onFocus || optional && <span>Opcional</span>}
     </Container>
-  )
-}
+    );
+  }
+);
