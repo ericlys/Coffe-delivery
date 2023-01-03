@@ -1,5 +1,5 @@
 import { Bank, CreditCard, CurrencyDollar, MapPinLine, Money, Trash } from 'phosphor-react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const Container = styled.div`
   width: 100%;
@@ -223,22 +223,29 @@ export const SummaryWrapper = styled.div`
   }
 `
 
-export const SubmitButton = styled.input`
+interface SubmitButtonProps {
+  disabled: boolean;
+}
+
+export const SubmitButton = styled.input<SubmitButtonProps>`
   width: 100%;
   border: none;
   font-weight: 700;
   font-size: 1.4rem;
   color: ${(props) => props.theme['white']}; 
-  background: ${(props) => props.theme['yellow']}; 
+  background: ${(props) => props.disabled ? props.theme['button'] : props.theme['yellow']}; 
   padding: 1.2rem;
   border-radius: 6px;
   cursor: pointer;
 
-  :active {
-    transform: scale(.99);
-  }
+  ${(props) => 
+    !props.disabled && css`
+     :active {
+        transform: scale(.99);
+      }
 
-  :hover {
-    filter: brightness(1.1);
-  }
+      :hover {
+        filter: brightness(1.1);
+      }
+  `}
 `

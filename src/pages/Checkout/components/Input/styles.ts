@@ -1,14 +1,15 @@
 import styled, { css } from "styled-components";
 
 interface ContainerProps {
-  width?: number
+  width?: number,
+  error: boolean
 }
 
 export const Container = styled.div<ContainerProps>`
   flex: 1;
   height: 4.2rem;
   background: ${({theme}) => theme['input']};
-  border: 1px solid ${({theme}) => theme['button']};;
+  border: 1px solid ${({theme, error}) => error ? theme['red'] : theme['button']};;
   border-radius: 4px;
 
   display: flex;

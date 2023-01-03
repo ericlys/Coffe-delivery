@@ -14,5 +14,6 @@ export const defaultTheme = {
   'purple-light': '#EBE5F9',
   'yellow-dark': '#C47F17',
   'yellow': '#DBAC2C',
-  'yellow-light': '#F1E9C9'
+  'yellow-light': '#F1E9C9',
+  'red': '#c90411'
 }

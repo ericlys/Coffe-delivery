@@ -7,16 +7,17 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string,
   register?: any,
   width?: number,
-  mask?: string
+  mask?: string,
+  error?: string,
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ optional, label, width, mask='', ...props }, ref) => {
+  ({ optional, label, width, mask='', error, ...props }, ref) => {
 
   const [onFocus, setOnFocus] = useState(false);
 
   return(
-    <Container width={width}>
+    <Container width={width} error={!!error}>
       <label htmlFor={label}/>
       <InputMask
         inputRef={ref}

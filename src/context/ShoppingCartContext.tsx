@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 type Product = {
   id: number
@@ -50,6 +51,12 @@ export function ShoppingCartContextProvider({children}: ShoppingCartContextProps
 
   function addProductToShoppingCart (product: Product, amount: number) {
     if(amount < 1) {
+      toast.warn('Selecione um produto primeiro')
+      return
+    }
+
+    if(amountItems + amount>99) {
+      toast.warn('Quantidade máxima de 99 produtos foi atingido!')
       return
     }
 
@@ -65,6 +72,7 @@ export function ShoppingCartContextProvider({children}: ShoppingCartContextProps
     
     setCart(newCart)
     localStorage.setItem('coffe-delivery',JSON.stringify(newCart));
+    toast.success('Café adicionado ao carrinho')
   }
 
   function removeProductFromShoppingCart(productId: number) {
@@ -72,6 +80,7 @@ export function ShoppingCartContextProvider({children}: ShoppingCartContextProps
 
     setCart(newListWithoutItem);
     localStorage.setItem('coffe-delivery',JSON.stringify(newListWithoutItem));
+    toast.success('Produto removido.')
   }
 
   function updateProductAmount(productId:number, amount:number){
@@ -89,6 +98,8 @@ export function ShoppingCartContextProvider({children}: ShoppingCartContextProps
 
   function clearShoppingCart() {
     setCart([]);
+    localStorage.setItem('coffe-delivery', '');
+    toast.success('Seu pedido está a caminho.')
   }
 
   return (

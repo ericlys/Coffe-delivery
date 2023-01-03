@@ -1,7 +1,7 @@
 import { BuyActionsWrapper, BuyCartIcon, BuyWrapper, Container, InfoWrapper, Tags } from "./styles";
 import { InputNumber } from "../../../../components/InputNumber";
-import { useContext, useEffect, useState } from "react";
-import { ShoppingCartContext } from "../../../../context/ShoppingCartContext";
+import { useEffect, useState } from "react";
+import { useCart } from "../../../../hooks/useCart";
 
 interface Coffe {
   id: number
@@ -18,7 +18,7 @@ interface CoffeItemProps {
 }
 
 export function CoffeItem({coffe}: CoffeItemProps){
-  const { addProductToShoppingCart } = useContext(ShoppingCartContext);
+  const { addProductToShoppingCart } = useCart();
 
   const [value, setValue] = useState(0);
 

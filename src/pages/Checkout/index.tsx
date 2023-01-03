@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,7 +30,7 @@ import { Input } from "./components/Input";
 
 import { InputNumber } from "../../components/InputNumber";
 import { useNavigate } from "react-router-dom";
-import { ShoppingCartContext } from "../../context/ShoppingCartContext";
+import { useCart } from "../../hooks/useCart";
 
 const checkoutFormValidationSchema = zod.object({
   zipCode: zod.string().length(9, 'Cep inválido'),
@@ -49,9 +49,9 @@ type moneySupplyType = 'credit card' | 'debit card' | 'cash';
 export function Checkout(){
   const navigate = useNavigate();
   const [moneySupply, setMoneySupply] = useState<moneySupplyType>('credit card');
-  const {cart, removeProductFromShoppingCart, updateProductAmount, clearShoppingCart} = useContext(ShoppingCartContext);
+  const {cart, amountItems, removeProductFromShoppingCart, updateProductAmount, clearShoppingCart} = useCart();
 
-  const { register, handleSubmit, watch, setValue } = useForm<checkoutFormData>({
+  const { register, handleSubmit, watch, setValue, formState: {errors} } = useForm<checkoutFormData>({
     resolver: zodResolver(checkoutFormValidationSchema)
   });
 
@@ -61,7 +61,7 @@ export function Checkout(){
     minimumFractionDigits: 2
   });
   
-  const delivery = Math.random() * (10 - 1) + 1;
+  const delivery = cart.length ? Math.random() * (amountItems - 1) + 1 : 0;
 
   const itemsAmount = 0;
   const total = 0;
@@ -143,6 +143,7 @@ export function Checkout(){
                 placeholder="CEP" 
                 {...register('zipCode')}
                 width={20}
+                error={errors.zipCode?.message}
               />
 
               <Input 
@@ -150,6 +151,7 @@ export function Checkout(){
                 label="street" 
                 placeholder="Rua" 
                 {...register('street')}
+                error={errors.street?.message}
               />
 
               <LineFormWrapper>
@@ -159,6 +161,7 @@ export function Checkout(){
                   type={"number"}
                   placeholder="Número" 
                   {...register('number')}
+                  error={errors.number?.message}
                   width={20}
                 />
 
@@ -179,6 +182,7 @@ export function Checkout(){
                   placeholder="Bairro" 
                   register={register}
                   {...register('district')}
+                  error={errors.district?.message}
                   width={20}
                 />
 
@@ -187,6 +191,7 @@ export function Checkout(){
                   label="city" 
                   placeholder="Cidade" 
                   {...register('city')}
+                  error={errors.city?.message}
                   register={register}
                 />
 
@@ -195,6 +200,7 @@ export function Checkout(){
                   label="state" 
                   placeholder="UF" 
                   {...register('state')}
+                  error={errors.state?.message}
                   width={6}
                 />
               </LineFormWrapper>
@@ -288,7 +294,7 @@ export function Checkout(){
               </li>
             </ul>
 
-            <SubmitButton type="submit" value="Confirmar pedido"/>
+            <SubmitButton disabled={amountItems < 1} type="submit" value="Confirmar pedido"/>
           </SummaryWrapper>
           </ItensWrapper>
 

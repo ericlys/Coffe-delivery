@@ -1,12 +1,11 @@
 import { Cart, CartIcon, Content, HeaderContainer, Locality, MapPoint, ShoppingInfo } from "./styles";
 import logoCoffe from "../../assets/logo-coffe.svg"
 import { NavLink } from "react-router-dom";
-import { useContext } from "react";
-import { ShoppingCartContext } from "../../context/ShoppingCartContext";
+import { useCart } from "../../hooks/useCart";
 
 export function Header(){
 
-  const { amountItems } = useContext(ShoppingCartContext);
+  const { amountItems } = useCart();
 
   let amountFormated = '';
 
