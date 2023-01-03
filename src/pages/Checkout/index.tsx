@@ -97,7 +97,7 @@ export function Checkout(){
 
   const getAddressByZipCode = async (code: string) => {
     const response = await fetch(
-      `http://viacep.com.br/ws/${code}/json/`,
+      `https://viacep.com.br/ws/${code}/json/`,
     )
 
     const address = await response.json();
